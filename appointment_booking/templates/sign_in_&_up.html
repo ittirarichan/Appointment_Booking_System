@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/a7cf4e395f.js" crossorigin="anonymous"></script>
+    <title>Document</title>
+    {% load static %}
+</head>
+<body>
+    <link rel="stylesheet" href="{% static 'sign_in_&_up.css' %}">
+    <script src="{% static 'js/sign_in_&_up.js' %}"></script>
+
+    <div class="login-box center">
+        <!-- Sign In Form -->
+        <div id="sign-in-box">
+            <h2>Sign in</h2>
+            <span>Use your user account</span>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <input type="text" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required><br>
+                <button type="submit" class="ad-sign-in-btn">Sign in</button>
+            </form>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div id="sign-up-box">
+            <h2>Sign up</h2>
+            <span>Create your user account</span>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required><br>
+                <button type="submit" class="us-sign-in-btn">Sign up</button>
+            </form>
+        </div>
+
+        <!-- Slider Button -->
+        <div id="slider-box">
+            <button onclick="sliding()" id="switch-btn">Sign in</button>
+        </div>
+
+        <!-- Welcome Text -->
+        <div class="text-box" id="sign-in-text-box">
+            <h1>Welcome</h1>
+            <span>Login as admin to access system or login as user</span>
+        </div>
+
+        <!-- Sign Up Text -->
+        <div class="text-box" id="sign-up-text-box">
+            <h1>Hello!!!</h1>
+            <span>Welcome to our system, let's create your account</span>
+        </div>
+    </div>
+</body>
+</html>

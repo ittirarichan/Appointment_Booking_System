@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor's Dashboard - MediCare</title>
+    {% load static %}
+</head>
+<body>
+    <link rel="stylesheet" href="{% static 'doctor_css/doc_home.css' %}">
+    <script src="{% static 'js/doc_home.js' %}"></script>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                MediCare
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Appointments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Patients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Prescriptions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Schedule</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Settings</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="doctor-info">
+                    <div class="doctor-avatar">DR</div>
+                    <div>
+                        <h2>Welcome, Dr. Smith</h2>
+                        <p>Cardiologist</p>
+                    </div>
+                </div>
+                <div class="date">
+                    Thursday, December 26, 2024
+                </div>
+            </header>
+
+            <!-- Stats Grid -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3>Today's Appointments</h3>
+                    <div class="value">8</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Patients</h3>
+                    <div class="value">1,247</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending Reports</h3>
+                    <div class="value">3</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Available Time Slots</h3>
+                    <div class="value">5</div>
+                </div>
+            </div>
+
+            <!-- Appointments Table -->
+            <div class="table-container">
+                <h2 style="margin-bottom: 1rem;">Today's Appointments</h2>
+                <table class="appointments-table">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John Doe</td>
+                            <td>09:00 AM</td>
+                            <td>Check-up</td>
+                            <td><span class="status-badge completed">Completed</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="openPrescriptionModal()">Write Prescription</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jane Smith</td>
+                            <td>10:30 AM</td>
+                            <td>Follow-up</td>
+                            <td><span class="status-badge upcoming">Upcoming</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="openPrescriptionModal()">Write Prescription</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Prescription Modal -->
+    <div class="modal" id="prescriptionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Write Prescription</h2>
+                <button class="close-modal" onclick="closePrescriptionModal()">&times;</button>
+            </div>
+            <form class="prescription-form">
+                <div class="form-group">
+                    <label>Patient Name</label>
+                    <input type="text" value="John Doe" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Diagnosis</label>
+                    <input type="text" placeholder="Enter diagnosis">
+                </div>
+                <div class="form-group">
+                    <label>Medications</label>
+                    <textarea rows="4" placeholder="Enter medications and dosage"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Instructions</label>
+                    <textarea rows="3" placeholder="Enter special instructions"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Next Follow-up</label>
+                    <input type="date">
+                </div>
+                <button type="submit" class="btn btn-primary">Save Prescription</button>
+            </form>
+        </div>
+    </div>
+
+
+</body>
+</html>
