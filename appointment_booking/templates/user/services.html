@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Our Services - [Hospital Name]</title>
+    {% load static %}
+</head>
+
+<body>
+    <link rel="stylesheet" href="{% static 'user_css/user_services.css'%}">
+
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <a href="/">[Hospital Logo]</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/departments">Departments</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/appointment" class="btn">Book an Appointment</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Our Services</h1>
+            <p>Comprehensive Care for You and Your Family</p>
+        </div>
+    </section>
+
+    <section class="services-categories">
+        <div class="container">
+            <h2>Our Specialized Services</h2>
+            <div class="service-cards">
+                <div class="service-card">
+                    <img src="images/emergency-care.jpg" alt="Emergency Care">
+                    <h3>Emergency Care</h3>
+                    <p>Immediate care for life-threatening injuries and illnesses.</p>
+                    <a href="/emergency-care" class="btn">Learn More</a>
+                </div>
+                <div class="service-card">
+                    <img src="images/cardiology.jpg" alt="Cardiology">
+                    <h3>Cardiology</h3>
+                    <p>Comprehensive heart care from diagnostics to treatment.</p>
+                    <a href="/cardiology" class="btn">Learn More</a>
+                </div>
+                <div class="service-card">
+                    <img src="images/pediatrics.jpg" alt="Pediatrics">
+                    <h3>Pediatrics</h3>
+                    <p>Expert care for infants, children, and adolescents.</p>
+                    <a href="/pediatrics" class="btn">Learn More</a>
+                </div>
+                <div class="service-card">
+                    <img src="images/orthopedics.jpg" alt="Orthopedics">
+                    <h3>Orthopedics</h3>
+                    <p>Advanced treatments for bones, joints, and muscles.</p>
+                    <a href="/orthopedics" class="btn">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-services">
+        <div class="container">
+            <h2>Featured Services</h2>
+            <div class="featured-cards">
+                <div class="featured-card">
+                    <img src="images/diagnostic-imaging.jpg" alt="Diagnostic Imaging">
+                    <h3>Advanced Diagnostic Imaging</h3>
+                    <p>State-of-the-art imaging to diagnose a wide range of conditions.</p>
+                    <a href="/diagnostic-imaging" class="btn">Explore Our Imaging Services</a>
+                </div>
+                <div class="featured-card">
+                    <img src="images/robotic-surgery.jpg" alt="Robotic Surgery">
+                    <h3>Robotic Surgery</h3>
+                    <p>Minimally invasive procedures with precision robotics.</p>
+                    <a href="/robotic-surgery" class="btn">Learn About Robotic Surgery</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Get the Care You Need</h2>
+            <a href="/appointment" class="btn btn-primary">Request an Appointment</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-social">
+                <a href="#"><img src="images/facebook-icon.png" alt="Facebook"></a>
+                <a href="#"><img src="images/twitter-icon.png" alt="Twitter"></a>
+                <a href="#"><img src="images/instagram-icon.png" alt="Instagram"></a>
+            </div>
+            <p>&copy; 2024 [Hospital Name]. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

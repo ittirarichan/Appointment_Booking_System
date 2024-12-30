@@ -3,149 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor's Dashboard - MediCare</title>
+    <title>Modern Hospital Admin</title>
     {% load static %}
 </head>
 <body>
     <link rel="stylesheet" href="{% static 'doctor_css/doc_home.css' %}">
-    <script src="{% static 'js/doc_home.js' %}"></script>
-    <div class="dashboard">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">
-                MediCare
-            </div>
-            <nav>
-                <ul class="nav-menu">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link active">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Appointments</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Patients</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Prescriptions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Schedule</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Settings</a>
-                    </li>
+    <!-- <script src="{% static 'js/doc_home.js' %}"></script> -->
+
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">Dr. Health</h1>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="logout">LogOut</a></li>
                 </ul>
             </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
-            <header class="header">
-                <div class="doctor-info">
-                    <div class="doctor-avatar">DR</div>
-                    <div>
-                        <h2>Welcome, Dr. Smith</h2>
-                        <p>Cardiologist</p>
-                    </div>
-                </div>
-                <div class="date">
-                    Thursday, December 26, 2024
-                </div>
-            </header>
-
-            <!-- Stats Grid -->
-            <div class="dashboard-grid">
-                <div class="stat-card">
-                    <h3>Today's Appointments</h3>
-                    <div class="value">8</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Total Patients</h3>
-                    <div class="value">1,247</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Pending Reports</h3>
-                    <div class="value">3</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Available Time Slots</h3>
-                    <div class="value">5</div>
-                </div>
-            </div>
-
-            <!-- Appointments Table -->
-            <div class="table-container">
-                <h2 style="margin-bottom: 1rem;">Today's Appointments</h2>
-                <table class="appointments-table">
-                    <thead>
-                        <tr>
-                            <th>Patient Name</th>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>John Doe</td>
-                            <td>09:00 AM</td>
-                            <td>Check-up</td>
-                            <td><span class="status-badge completed">Completed</span></td>
-                            <td>
-                                <button class="btn btn-primary" onclick="openPrescriptionModal()">Write Prescription</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Jane Smith</td>
-                            <td>10:30 AM</td>
-                            <td>Follow-up</td>
-                            <td><span class="status-badge upcoming">Upcoming</span></td>
-                            <td>
-                                <button class="btn btn-primary" onclick="openPrescriptionModal()">Write Prescription</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
-    </div>
-
-    <!-- Prescription Modal -->
-    <div class="modal" id="prescriptionModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Write Prescription</h2>
-                <button class="close-modal" onclick="closePrescriptionModal()">&times;</button>
-            </div>
-            <form class="prescription-form">
-                <div class="form-group">
-                    <label>Patient Name</label>
-                    <input type="text" value="John Doe" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Diagnosis</label>
-                    <input type="text" placeholder="Enter diagnosis">
-                </div>
-                <div class="form-group">
-                    <label>Medications</label>
-                    <textarea rows="4" placeholder="Enter medications and dosage"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Instructions</label>
-                    <textarea rows="3" placeholder="Enter special instructions"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Next Follow-up</label>
-                    <input type="date">
-                </div>
-                <button type="submit" class="btn btn-primary">Save Prescription</button>
-            </form>
         </div>
-    </div>
+    </header>
 
+    <section class="hero">
+        <div class="container">
+            <h2 class="hero-title">Caring for Your Health</h2>
+            <p class="hero-subtitle">Providing top-notch healthcare services for your well-being.</p>
+            <a href="#contact" class="btn">Book an Appointment</a>
+        </div>
+    </section>
 
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About Dr. Health</h2>
+            <p>Dr. Health is a trusted medical professional with years of experience in patient care. Our clinic ensures personalized treatments and modern healthcare solutions.</p>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <div class="service-grid">
+                <div class="service-item">
+                    <h3>General Checkup</h3>
+                    <p>Comprehensive health assessments to keep you on track.</p>
+                </div>
+                <div class="service-item">
+                    <h3>Specialist Consultation</h3>
+                    <p>Access to expert advice for specific health concerns.</p>
+                </div>
+                <div class="service-item">
+                    <h3>Diagnostics</h3>
+                    <p>State-of-the-art diagnostic tests and lab facilities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <h2>What Our Patients Say</h2>
+            <div class="testimonial-item">
+                <p>"Dr. Health provided exceptional care and personalized attention. Highly recommend!"</p>
+                <span>- Jane Doe</span>
+            </div>
+            <div class="testimonial-item">
+                <p>"The clinic is well-equipped, and the staff is incredibly kind and professional."</p>
+                <span>- John Smith</span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" id="contact">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <p>Email: contact@drhealth.com | Phone: +123 456 7890</p>
+            <p>© 2024 Dr. Health. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
