@@ -18,7 +18,13 @@
                 <a href="">Home</a>
                 <a href="services">Services</a>
                 <a href="#">Doctors</a>
-                <a href="#">Appointments</a>
+                {% if appointment.id %}
+                <a href="{% url 'appointment_success' appointment_id=appointment.id %}" class="btn btn-primary">
+                    View Appointment Success
+                </a>
+            {% else %}
+                <p>No appointment available</p>
+            {% endif %}
                 <a href="logout">logout</a>
             </div>
             <button class="menu-btn">☰</button>
@@ -30,7 +36,7 @@
         <div class="hero-content">
             <h1>Your Health is Our Priority</h1>
             <p>Professional healthcare services with a personal touch</p>
-            <button class="cta-button">Book Appointments</button>
+           <a href="{% url 'quick_appointment' %}"> <button class="cta-button">Book Appointments</button></a>
         </div>
     </section>
 

@@ -15,4 +15,9 @@ urlpatterns=[
     path('register-doctor/', views.register_doctor, name='register_doctor'),
     path('services',views.user_services),
 
-    ]
+    # URL for creating a token
+    path('book-appointment/',views.book_appointment, name='book_appointment'),
+        path('get-doctors/',views.get_doctors, name='get_doctors'),
+
+
+]

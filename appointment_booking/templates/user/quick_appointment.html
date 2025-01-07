@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment</title>
+</head>
+<body>
+    <h1>Book Appointment</h1>
+
+    <!-- Display messages -->
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <label for="patient_name">Patient Name</label>
+            <input type="text" id="patient_name" name="patient_name" required>
+        </div>
+        <div>
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" required>
+        </div>
+        <div>
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+        <div>
+            <label for="phone">Phone</label>
+            <input type="text" id="phone" name="phone" required>
+        </div>
+        <div>
+            <label for="address">Address</label>
+            <textarea id="address" name="address" required></textarea>
+        </div>
+
+        <!-- Department Selection -->
+        <div>
+            <label for="department">Department</label>
+            <select id="department" name="department" required>
+                <option value="">Select Department</option>
+                {% for department in departments %}
+                    <option value="{{ department.id }}">{{ department.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Doctor Selection -->
+        <div>
+            <label for="doctor">Doctor</label>
+            <select id="doctor" name="doctor" required>
+                <option value="">Select Doctor</option>
+                {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}">{{ doctor.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit">Book Appointment</button>
+    </form>
+
+    <script>
+        // Dynamically load doctors based on department
+        document.getElementById('department').addEventListener('change', function() {
+            var departmentId = this.value;
+            fetch(`/get-doctors/?department_id=${departmentId}`)
+                .then(response => response.json())
+                .then(data => {
+                    var doctorSelect = document.getElementById('doctor');
+                    doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+                    data.doctors.forEach(function(doctor) {
+                        var option = document.createElement('option');
+                        option.value = doctor.id;
+                        option.textContent = doctor.name;
+                        doctorSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching doctors:', error));
+        });
+    </script>
+</body>
+</html>
