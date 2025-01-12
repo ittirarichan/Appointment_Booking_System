@@ -49,13 +49,13 @@
 
         <div class="main-content mt-0 ms-0 w-100">
             <div class="row w-100">
-                {% for dep in Department %}
+                {% for dep in Departments %}
                 <div class="col-12 mb-3 d-flex w-50">
                     <div class="d-flex w-100 align-items-center border p-3 rounded shadow-sm" style="background-color: azure;">
                         <!-- Product Name and Actions -->
                         <div class="ml-3 w-100">
                             <div class="d-flex justify-content-between">
-                                <h5 class="mb-0 text-truncate">{{ dep.spec_name }}</h5>
+                                <h5 class="mb-0 text-truncate">{{ dep.name }}</h5>
                                 <!-- Delete Button -->
                                 <a href="{% url 'delete_Specialization' dep.id %}" class="btn btn-outline-dark btn-sm" onclick="return confirm('Are you sure you want to delete this category?');">
                                     <i class="fas fa-trash-alt"></i> Delete

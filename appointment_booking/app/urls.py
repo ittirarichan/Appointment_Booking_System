@@ -17,7 +17,5 @@ urlpatterns=[
 
     # URL for creating a token
     path('book-appointment/',views.book_appointment, name='book_appointment'),
-        path('get-doctors/',views.get_doctors, name='get_doctors'),
-
-
+    path('get-doctors/',views.get_doctors, name='get_doctors'),
 ]

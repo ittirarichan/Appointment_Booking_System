@@ -21,7 +21,11 @@
         {% csrf_token %}
         <div>
             <label for="patient_name">Patient Name</label>
-            <input type="text" id="patient_name" name="patient_name" required>
+            <input type="text" id="patient_name" name="name" required>
+        </div>
+        <div>
+            <label for="patient_email">Patient Email</label>
+            <input type="email" id="patient_email" name="email" required>
         </div>
         <div>
             <label for="age">Age</label>
@@ -31,8 +35,9 @@
             <label for="gender">Gender</label>
             <select id="gender" name="gender" required>
                 <option value="">Select</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
             </select>
         </div>
         <div>
@@ -42,6 +47,10 @@
         <div>
             <label for="address">Address</label>
             <textarea id="address" name="address" required></textarea>
+        </div>
+        <div>
+            <label for="date">Date</label>
+            <input type="date" id="appointment_date" name="appointment_date" required>
         </div>
 
         <!-- Department Selection -->
@@ -87,6 +96,35 @@
                 })
                 .catch(error => console.error('Error fetching doctors:', error));
         });
+
+
+                // Function to get today's date and tomorrow's date in 'yyyy-mm-dd' format
+                function getDateString(offset) {
+            const today = new Date();
+            today.setDate(today.getDate() + offset);
+            const year = today.getFullYear();
+            const month = ('0' + (today.getMonth() + 1)).slice(-2); // Pad month to 2 digits
+            const day = ('0' + today.getDate()).slice(-2); // Pad day to 2 digits
+            return `${year}-${month}-${day}`;
+        }
+
+        // Validate the date input before form submission
+        function validateDate() {
+            const selectedDate = document.getElementById("appointment_date").value;
+            const today = getDateString(0);
+            const tomorrow = getDateString(1);
+            if (selectedDate !== today && selectedDate !== tomorrow) {
+                alert("You can only pick today or tomorrow.");
+                return false; // Prevent form submission
+            }
+            return true; // Allow form submission
+        }
+
+        // Set the min and max dates to today and tomorrow when the page loads
+        window.onload = function() {
+            document.getElementById("appointment_date").min = getDateString(0); // Set min to today
+            document.getElementById("appointment_date").max = getDateString(1); // Set max to tomorrow
+        };
     </script>
 </body>
 </html>

@@ -99,8 +99,8 @@ def logout(req):
     if 'patient' in req.session:
         # req.session.flush()
         del req.session['patient']
-    if 'staff' in req.session:
-        del req.session['staff']
+    # if 'staff' in req.session:
+    #     del req.session['staff']
     if 'doctor' in req.session:
         del req.session['doctor']
     if 'admin' in req.session:
@@ -153,24 +153,26 @@ def user_register(req):
 def add_Specialization(request):
     if request.method == 'POST':
         dep_name = request.POST['dep_name']
-        Department.objects.create(spec_name=dep_name.upper())
-        departments = Department.objects.all()  # Use 'departments' instead of 'Department'
+        Department.objects.create(name=dep_name.upper())
+        dep = Department.objects.all()  # Use 'departments' instead of 'Department'
     # Your other logic goes here
-    return render(request, 'admin/add_department.html', {'Departments': departments})
+        return redirect(add_Specialization)
+    else:
+        dep = Department.objects.all()
+        return render(request, 'admin/add_department.html', {'Departments': dep})
     
 
 def delete_Specialization(req, id):
     if 'admin' in req.session:
         try:
-            Department = Department.objects.get(id=id)
-            Department.delete()
+            department = Department.objects.get(id=id)
+            department.delete()
+            messages.success(req, "Department successfully deleted.")
         except Department.DoesNotExist:
             messages.error(req, "Department not found.")
-        return redirect(add_Specialization)
+        return redirect(add_Specialization)  # Make sure `add_Specialization` is defined elsewhere
     else:
-        return redirect(appointment_login)
-    
-
+        return redirect(appointment_login)  # Make sure `appointment_login` is defined elsewhere
 
 
 
@@ -249,7 +251,7 @@ def register_doctor(request):
             password = generate_random_password()
 
             # Create a new user (staff member)
-            data = Doctor.objects.create(name=name,email=email,Department=spec, password=password)
+            data = Doctor.objects.create(name=name,email=email,specialization=spec, password=password)
             data.save()
             
             # Send the password to the staff via email
@@ -274,80 +276,65 @@ def register_doctor(request):
 
 
 # ----------------------------------------------------token--------------------------------------------------------------------------
-
 def book_appointment(request):
     if request.method == 'POST':
-        # Collecting data from the form
-        patient_name = request.POST.get('patient_name')
-        age = request.POST.get('age')
-        gender = request.POST.get('gender')
-        phone = request.POST.get('phone')
-        address = request.POST.get('address')
-        department_id = request.POST.get('department')
-        doctor_id = request.POST.get('doctor')
+        name=request.POST['name']
+        email=request.POST['email']
+        age=request.POST['age']
+        gender=request.POST['gender']
+        phone=request.POST['phone']
+        address=request.POST['address']
+        appointment_date=request.POST['appointment_date']
+        department_id=request.POST['department']
+        doctor_id=request.POST['doctor']
 
-        # Basic form validation (check for missing fields)
-        if not patient_name or not age or not gender or not phone or not address or not department_id or not doctor_id:
-            messages.error(request, "All fields are required.")
-            return render(request, 'user/quick_appointment.html', {'departments': Department.objects.all()})
+        department = Department.objects.get(id=department_id)
+        doctor = Doctor.objects.get(id=doctor_id)
+        
+  
+        appointment = Appointment.objects.create(name=name,email=email,phone=phone,address=address,department=department,
+                                                 doctor=doctor,appointment_date=appointment_date)
+        appointment.save()
+    else:
+        # Fetch categories and brands to populate dropdowns
+        doctor = Doctor.objects.all()
+        department = Department.objects.all()
+        return render(request, 'user/quick_appointmnet.html', {'doctor': doctor, 'department': department})
+        
 
-        try:
-            department = Department.objects.get(id=department_id)
-            doctor = Doctor.objects.get(id=doctor_id)
 
-            # Check if department has reached the token limit for today
-            today = timezone.now().date()
-            appointment_count = Appointment.objects.filter(department=department, appointment_datetime__date=today).count()
 
-            if appointment_count >= department.max_tokens_per_day:
-                messages.error(request, f"The token limit of {department.max_tokens_per_day} for today has been reached. Please try again tomorrow.")
-                return render(request, 'user/quick_appointment.html', {'departments': Department.objects.all()})
+# def book_appointment(req):
+#     if 'shop' in req.session:
+#         if req.method == 'POST':
+#             product_id = req.POST['pid']
+#             name = req.POST['name']
+#             description = req.POST['description']
+#             gender = req.POST['gender']
+#             price = req.POST['price']
+#             offer_price = req.POST['offer_price']
+#             stock = req.POST['stock']
+#             file = req.FILES['image']
+#             pro_cat_id = req.POST['pro_cat']  # Get selected category ID (no need to create)
+#             pro_bnd_id = req.POST['pro_bnd']  # Get selected brand ID (no need to create)
 
-            # Generate token number
-            token_number = f"{department.id}-{today.strftime('%Y%m%d')}-{appointment_count + 1:03d}"
+#             # Fetch the related Category and Brand objects
+#             pro_cat = Category.objects.get(id=pro_cat_id)
+#             pro_bnd = Brand.objects.get(id=pro_bnd_id)
+ 
 
-            # Cast age to an integer and create the appointment
-            try:
-                age = int(age)  # Cast age to an integer
-            except ValueError:
-                messages.error(request, "Age must be a valid number.")
-                return render(request, 'user/quick_appointment.html', {'departments': Department.objects.all()})
+#             product = Product.objects.create(pid=product_id,name=name,dis=description,gender=gender.upper(),
+#                                 price=price,offer_price=offer_price,stock=stock,img=file,pro_cat=pro_cat,pro_bnd=pro_bnd)
 
-            # Create the appointment
-            appointment = Appointment.objects.create(
-                department=department,
-                doctor=doctor,
-                patient_name=patient_name,
-                age=age,
-                gender=gender,
-                phone=phone,
-                address=address,
-                appointment_datetime=timezone.now(),
-                token_number=token_number
-            )
-
-            # Success message
-            messages.success(request, f"Appointment booked successfully! Your token number is {token_number}.")
-            return redirect('appointment_success', token_number=token_number)
-
-        except Department.DoesNotExist:
-            messages.error(request, "Invalid department selected.")
-        except Doctor.DoesNotExist:
-            messages.error(request, "Invalid doctor selected.")
-        except Exception as e:
-            messages.error(request, "An error occurred while booking the appointment.")
-            print(f"Error: {e}")  # It might be helpful to log this error in the logs
-
-    # Fetch departments and doctors
-    departments = Department.objects.all()
-    doctors = Doctor.objects.none()  # Default to no doctors
-
-    if 'department' in request.POST:
-        department_id = request.POST.get('department')
-        if department_id:
-            doctors = Doctor.objects.filter(department_id=department_id)
-
-    return render(request, 'user/quick_appointment.html', {'departments': departments, 'doctors': doctors})
+#             product.save()  # Save the product object
+#             return redirect(manage_products)
+#         else:
+#             # Fetch categories and brands to populate dropdowns
+#             categories = Category.objects.all()
+#             brands = Brand.objects.all()
+#             return render(req, 'shop/add_product.html', {'categories': categories, 'brands': brands})
+#     else:
+#         return redirect(perfume_login)
 
 
 
