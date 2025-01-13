@@ -35,12 +35,12 @@
             <label for="email">Email</label>
             <input type="email" name="email" required>
 
-              <div class="mb-3">
-                <label for="spec_name" class="form-label">Specializations</label>
+            <div class="mb-3">
+                <label for="spec_name" class="form-label">Departments</label>
                 <select class="form-control" id="spec_name" name="spec_name" required>
-                    <option value="" disabled selected>Select a Department</option>
+                    <option value="" selected>Select a Department</option>
                     {% for dep in departments %}
-                        <option value="{{ dep.id }}">{{ dep.spec_name }}</option>
+                        <option value="{{ dep.id }}">{{ dep.name }}</option>
                     {% endfor %}
                 </select>
             </div>

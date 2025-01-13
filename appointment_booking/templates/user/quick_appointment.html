@@ -17,7 +17,7 @@
         </ul>
     {% endif %}
 
-    <form method="POST">
+    <form method="POST" onsubmit="return validateDate()">
         {% csrf_token %}
         <div>
             <label for="patient_name">Patient Name</label>
@@ -97,9 +97,8 @@
                 .catch(error => console.error('Error fetching doctors:', error));
         });
 
-
-                // Function to get today's date and tomorrow's date in 'yyyy-mm-dd' format
-                function getDateString(offset) {
+        // Function to get today's date and tomorrow's date in 'yyyy-mm-dd' format
+        function getDateString(offset) {
             const today = new Date();
             today.setDate(today.getDate() + offset);
             const year = today.getFullYear();

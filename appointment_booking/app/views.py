@@ -10,7 +10,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 import hashlib  #for password hashing
-from .models import Department, Doctor, Appointment,Patient # Import models explicitly
+from .models import Department,Appointment, Doctor,Patient # Import models explicitly
 import random
 import string
 
@@ -200,36 +200,36 @@ def generate_random_password(length=8):
 
 
 
-def register_staff(request):
-    if request.method == 'POST':
-        # Get the data from the form
-        # username = request.POST.get('username')
-        email = request.POST.get('email')
+# def register_staff(request):
+#     if request.method == 'POST':
+#         # Get the data from the form
+#         # username = request.POST.get('username')
+#         email = request.POST.get('email')
         
-        if email:
-            # Generate a random password
-            password = generate_random_password()
+#         if email:
+#             # Generate a random password
+#             password = generate_random_password()
 
-            # data = Staff.objects.create(email=email, password=password)
+#             # data = Staff.objects.create(email=email, password=password)
             
-            try:
-                send_mail(
-                    'Your Account Details',
-                    f"Your account has been created. Your password is: {password}",
-                    settings.EMAIL_HOST_USER,
-                    [email],
-                    fail_silently=False
-                )
-            except Exception as e:
-                messages.error(request, f"Error sending email: {e}")
+#             try:
+#                 send_mail(
+#                     'Your Account Details',
+#                     f"Your account has been created. Your password is: {password}",
+#                     settings.EMAIL_HOST_USER,
+#                     [email],
+#                     fail_silently=False
+#                 )
+#             except Exception as e:
+#                 messages.error(request, f"Error sending email: {e}")
 
 
-            messages.success(request, "Staff member created successfully! The password has been sent to their email." )
-            return redirect(admin_home)  # Redirect to admin dashboard or another page
-        else:
-            messages.error(request, "Please provide email.")
+#             messages.success(request, "Staff member created successfully! The password has been sent to their email." )
+#             return redirect(admin_home)  # Redirect to admin dashboard or another page
+#         else:
+#             messages.error(request, "Please provide email.")
     
-    return render(request, 'admin/register_staff.html')
+#     return render(request, 'admin/register_staff.html')
 
 
 
@@ -242,99 +242,140 @@ def register_doctor(request):
         # Get the data from the form
         name = request.POST.get('name')
         email = request.POST.get('email')
-        spec_name_id =request.POST.get('spec_name')
+        department_id = request.POST.get('spec_name')  # Renamed to department_id for clarity
 
-        spec=Department.objects.get(id=spec_name_id)
-        
-        if email:
-            # Generate a random password
-            password = generate_random_password()
+        try:
+            # Get the department object (used as specialization in the Doctor model)
+            department = Department.objects.get(id=department_id)
 
-            # Create a new user (staff member)
-            data = Doctor.objects.create(name=name,email=email,specialization=spec, password=password)
-            data.save()
-            
-            # Send the password to the staff via email
-            send_mail(
-                'Your Doctor Account Details',
-                f'Hello {name},\n\nYour Doctor account has been created. Your password is: {password}\nPlease change it after logging in.',
-                'abhishekbinish86@gmail.com',  # Replace with your email
-                [email],
-                fail_silently=False,
-            )
+            # Check if email is provided
+            if email:
+                # Generate a random password
+                password = generate_random_password()
 
-            messages.success(request, "Doctor member created successfully! The password has been sent to their email.")
-            return redirect(admin_home)  # Redirect to admin dashboard or another page
-        else:
-            messages.error(request, "Please provide email.")
-    
-    departments=Department.objects.all()
-    return render(request, 'admin/register_doc.html',{'departments':departments})
+                # Create a new doctor record in the database
+                doctor = Doctor.objects.create(
+                    name=name,
+                    email=email,
+                    department=department,  # Store the department as specialization
+                    password=password
+                )
+
+                # Send the password to the doctor via email
+                send_mail(
+                    'Your Doctor Account Details',
+                    f'Hello {name},\n\nYour Doctor account has been created. Your password is: {password}\nPlease change it after logging in.',
+                    'abhishekbinish86@gmail.com',  # Replace with your email
+                    [email],
+                    fail_silently=False,
+                )
+
+                # Success message and redirect to admin dashboard
+                messages.success(request, "Doctor member created successfully! The password has been sent to their email.")
+                return redirect(admin_home)  # Make sure 'admin_home' URL is defined correctly
+
+            else:
+                # Error if email is missing
+                messages.error(request, "Please provide an email.")
+        except Department.DoesNotExist:
+            # Handle the case when the department is not found
+            messages.error(request, "Invalid department selected. Please try again.")
+
+    # Fetch departments to display in the form
+    departments = Department.objects.all()
+
+    return render(request, 'admin/register_doc.html', {'departments': departments})
 
 
 
 
 
 # ----------------------------------------------------token--------------------------------------------------------------------------
-def book_appointment(request):
-    if request.method == 'POST':
-        name=request.POST['name']
-        email=request.POST['email']
-        age=request.POST['age']
-        gender=request.POST['gender']
-        phone=request.POST['phone']
-        address=request.POST['address']
-        appointment_date=request.POST['appointment_date']
-        department_id=request.POST['department']
-        doctor_id=request.POST['doctor']
+# def book_appointment(request):
+#     if request.method == 'POST':
+#         name=request.POST['name']
+#         email=request.POST['email']
+#         age=request.POST['age']
+#         gender=request.POST['gender']
+#         phone=request.POST['phone']
+#         address=request.POST['address']
+#         appointment_date=request.POST['appointment_date']
+#         department_id=request.POST['department']
+#         doctor_id=request.POST['doctor']
 
-        department = Department.objects.get(id=department_id)
-        doctor = Doctor.objects.get(id=doctor_id)
+#         department = Department.objects.get(id=department_id)
+#         doctor = Doctor.objects.get(id=doctor_id)
         
   
-        appointment = Appointment.objects.create(name=name,email=email,phone=phone,address=address,department=department,
-                                                 doctor=doctor,appointment_date=appointment_date)
-        appointment.save()
-    else:
-        # Fetch categories and brands to populate dropdowns
-        doctor = Doctor.objects.all()
-        department = Department.objects.all()
-        return render(request, 'user/quick_appointmnet.html', {'doctor': doctor, 'department': department})
+#         appointment = Appointment.objects.create(name=name,email=email,age=age,gender=gender,phone=phone,address=address,department=department,
+#                                                  doctor=doctor,appointment_date=appointment_date)
+#         appointment.save()
+#     else:
+#         # Fetch categories and brands to populate dropdowns
+#         doctor = Doctor.objects.all()
+#         department = Department.objects.all()
+#         return render(request, 'user/quick_appointmnet.html', {'doctor': doctor, 'department': department})
         
 
+def book_appointment(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        age = request.POST['age']
+        gender = request.POST['gender']
+        phone = request.POST['phone']
+        address = request.POST['address']
+        appointment_date = request.POST['appointment_date']
+        department_id = request.POST['department']
+        doctor_id = request.POST['doctor']
 
+        # Get the department and doctor objects
+        department = Department.objects.get(id=department_id)
+        doctor = Doctor.objects.get(id=doctor_id)
 
-# def book_appointment(req):
-#     if 'shop' in req.session:
-#         if req.method == 'POST':
-#             product_id = req.POST['pid']
-#             name = req.POST['name']
-#             description = req.POST['description']
-#             gender = req.POST['gender']
-#             price = req.POST['price']
-#             offer_price = req.POST['offer_price']
-#             stock = req.POST['stock']
-#             file = req.FILES['image']
-#             pro_cat_id = req.POST['pro_cat']  # Get selected category ID (no need to create)
-#             pro_bnd_id = req.POST['pro_bnd']  # Get selected brand ID (no need to create)
+        # Check how many appointments have already been booked for this doctor on the given appointment date
+        appointment_count = Appointment.objects.filter(doctor=doctor, appointment_date=appointment_date).count()
 
-#             # Fetch the related Category and Brand objects
-#             pro_cat = Category.objects.get(id=pro_cat_id)
-#             pro_bnd = Brand.objects.get(id=pro_bnd_id)
- 
+        # If the appointment count exceeds the max token limit for the department, raise an error
+        if appointment_count >= doctor.department.max_tokens_per_day:
+            return render(request, 'user/quick_appointmnet_error.html', {
+                'error': f"Cannot book more than {doctor.department.max_tokens_per_day} appointments for this department on this day."
+            })
 
-#             product = Product.objects.create(pid=product_id,name=name,dis=description,gender=gender.upper(),
-#                                 price=price,offer_price=offer_price,stock=stock,img=file,pro_cat=pro_cat,pro_bnd=pro_bnd)
+        # Generate the token number for this appointment
+        token_number = appointment_count + 1  # Token numbers start from 1, incrementing with each appointment
 
-#             product.save()  # Save the product object
-#             return redirect(manage_products)
-#         else:
-#             # Fetch categories and brands to populate dropdowns
-#             categories = Category.objects.all()
-#             brands = Brand.objects.all()
-#             return render(req, 'shop/add_product.html', {'categories': categories, 'brands': brands})
-#     else:
-#         return redirect(perfume_login)
+        # Check if the patient already exists
+        try:
+            patient = Patient.objects.get(email=email)  # Try to find the patient by email
+        except Patient.DoesNotExist:
+            # If the patient does not exist, create a new patient
+            patient = Patient.objects.create(
+                name=name,
+                email=email,
+                age=age,
+                gender=gender,
+                phone=phone,
+                address=address
+            )
+
+        # Create the appointment with the generated token number and the patient instance
+        appointment = Appointment.objects.create(
+            doctor=doctor,
+            patient=patient,
+            appointment_date=appointment_date,
+            department=department.name,  # Store the department name
+            token_number=token_number
+        )
+
+        # Return the success page with the generated appointment details
+        return render(request, 'user/appointment_success.html', {'token_number': appointment.token_number})
+
+    else:
+        # Fetch doctors and departments to populate dropdowns
+        doctors = Doctor.objects.all()
+        departments = Department.objects.all()
+        return render(request, 'user/quick_appointment.html', {'doctors': doctors, 'departments': departments})
 
 
 
@@ -347,12 +388,6 @@ def get_doctors(request):
 
 def appointment_success(request, token_number):
     return render(request, 'user/appointment_success.html', {'token_number': token_number})
-
-
-
-
-
-
 
 
 

@@ -11,11 +11,11 @@ urlpatterns=[
     path('logout',views.logout),
     path('department',views.add_Specialization),
     path('delete_Specialization/<int:id>/', views.delete_Specialization, name='delete_Specialization'),
-    path('register-staff/', views.register_staff, name='register_staff'),
+    # path('register-staff/', views.register_staff, name='register_staff'),
     path('register-doctor/', views.register_doctor, name='register_doctor'),
     path('services',views.user_services),
 
     # URL for creating a token
-    path('book-appointment/',views.book_appointment, name='book_appointment'),
+    path('appointment',views.book_appointment),
     path('get-doctors/',views.get_doctors, name='get_doctors'),
 ]
