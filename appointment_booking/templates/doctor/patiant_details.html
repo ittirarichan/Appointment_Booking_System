@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .patient-info, .prescription-form {
+            margin-bottom: 30px;
+        }
+        .patient-info h2, .prescription-form h2 {
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        .input, .textarea {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+        }
+        .textarea {
+            height: 150px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="patient-info">
+            <h2>Patient Details</h2>
+            <p><strong>Name:</strong> {{ patient.name }}</p>
+            <p><strong>Age:</strong> {{ patient.age }}</p>
+            <p><strong>Gender:</strong> {{ patient.get_gender_display }}</p>
+            <p><strong>Phone:</strong> {{ patient.phone }}</p>
+            <p><strong>Email:</strong> {{ patient.email }}</p>
+            <p><strong>Address:</strong> {{ patient.address }}</p>
+            <p><strong>Pincode:</strong> {{ patient.pincode }}</p>
+            <p><strong>Blood Group:</strong> {{ patient.blood_group }}</p>
+        </div>
+
+        <div class="prescription-form">
+            <h2>Prescription Details</h2>
+            <form action="{% url 'prescribe_medication' patient.id %}" method="POST">
+            <!-- <form action="" method="POST"> -->
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="medications">Medications:</label>
+                    <textarea id="medications" name="medications" class="textarea" placeholder="Enter prescribed medications here...">{{ prescription.medications }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_prescribed">Date Prescribed:</label>
+                    <input type="text" id="date_prescribed" name="date_prescribed" class="input" value="{{ prescription.date_prescribed|date:'Y-m-d' }}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Additional Notes:</label>
+                    <textarea id="notes" name="notes" class="textarea" placeholder="Any additional notes...">{{ prescription.notes }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="button">Save Prescription</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -37,6 +37,7 @@ class Prescription(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='prescriptions')
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     medications = models.TextField(help_text="List the medications prescribed.")
+    # qty = models.CharField(max_length=100, help_text="Quantity of the medication prescribed.")
     date_prescribed = models.DateTimeField(auto_now_add=True)
     notes = models.TextField(blank=True, null=True, help_text="Any additional notes from the doctor.")
 

@@ -6,7 +6,23 @@
     <title>Appointment Success</title>
 </head>
 <body>
-    <h1>Appointment Successful!</h1>
-    <p>Your appointment has been successfully booked. Your token number is: <strong>{{ token_number }}</strong></p>
+    <h1>Appointment History</h1>
+
+    {% if appointments %}
+        <ul>
+        {% for appointment in appointments %}
+            <li>
+                <strong>Doctor:</strong> {{ appointment.doctor.name }}<br>
+                <strong>Specialization:</strong> {{ appointment.doctor.specialization }}<br>
+                <strong>Appointment Date:</strong> {{ appointment.appointment_date }}<br>
+                <strong>Token Number:</strong> {{ appointment.token_number }}<br>
+                <strong>Department:</strong> {{ appointment.department }}<br>
+                <hr>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no appointment history.</p>
+    {% endif %}
 </body>
 </html>

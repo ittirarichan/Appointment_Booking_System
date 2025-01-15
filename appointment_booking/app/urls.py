@@ -17,5 +17,9 @@ urlpatterns=[
 
     # URL for creating a token
     path('appointment',views.book_appointment),
+    path('appointment_success', views.appointment_success, name='appointment_success'),
     path('get-doctors/',views.get_doctors, name='get_doctors'),
+    path('doctor_appointments_view',views.doctor_appointments_view),
+    path('patient/<int:patient_id>/details/', views.view_patient_details, name='view_patient_details'),
+    path('prescribe/<int:patient_id>/', views.view_patient_details, name='prescribe_medication'),
 ]

@@ -18,14 +18,8 @@
                 <a href="">Home</a>
                 <a href="services">Services</a>
                 <a href="#">Doctors</a>
-                {% if appointment.id %}
-                <a href="{% url 'appointment_success' appointment_id=appointment.id %}" class="btn btn-primary">
-                    View Appointment Success
-                </a>
-            {% else %}
-                <p>No appointment available</p>
-            {% endif %}
-                <a href="logout">logout</a>
+                <a href="{% url 'appointment_success' %}">Token History</a>
+                <a href="logout">Logout</a>
             </div>
             <button class="menu-btn">☰</button>
         </div>
