@@ -17,9 +17,15 @@ urlpatterns=[
 
     # URL for creating a token
     path('appointment',views.book_appointment),
-    path('appointment_success', views.appointment_success, name='appointment_success'),
+    path('appointment_success', views.appointment_success),
     path('get-doctors/',views.get_doctors, name='get_doctors'),
     path('doctor_appointments_view',views.doctor_appointments_view),
     path('patient/<int:patient_id>/details/', views.view_patient_details, name='view_patient_details'),
     path('prescribe/<int:patient_id>/', views.view_patient_details, name='prescribe_medication'),
+    path('prescriptions', views.view_prescription),
+    path('admin_view_appointments', views.admin_view_appointments),
+    path('view_all_patient', views.view_all_patient),
+    path('view_all_doctors', views.view_all_doctors),
+    path('view_all_prescription', views.view_all_prescription),
+
 ]

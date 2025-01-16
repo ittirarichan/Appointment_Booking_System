@@ -16,8 +16,9 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
+            background-color: #ffffff;
             margin: 0;
+            overflow-x: hidden;
         }
 
         /* Sidebar Styles */
@@ -86,46 +87,64 @@
             margin-left: 0;
         }
 
-        /* Form Section */
-        .form-section {
-            background-color: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
-        }
-
-        .form-section h2 {
-            text-align: center;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        .form-control {
-            border-radius: 5px;
-            box-shadow: none;
-            border: 1px solid #ddd;
-            padding: 10px;
-        }
-
-        .btn-primary {
-            width: 100%;
-            background-color: #007bff;
+        .menu-toggle {
+            display: none;
+            background: none;
             border: none;
-            padding: 12px;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 300px;
+            padding: 10px;
             border-radius: 5px;
-            font-size: 16px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
         }
 
-        .btn-primary:hover {
-            background-color: #0056b3;
+        .user-profile {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
         }
 
-        /* Alert Message */
-        .alert {
-            margin-top: 20px;
+        /* Appointment Card Styles */
+        .appointment-card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .appointment-card h5 {
+            color: var(--primary-color);
+        }
+
+        .appointment-card p {
+            color: #6c757d;
+            margin: 0;
         }
 
         /* Responsive Design */
+        @media screen and (max-width: 1024px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media screen and (max-width: 768px) {
             :root {
                 --sidebar-width: 100%;
@@ -151,8 +170,32 @@
             .menu-toggle {
                 display: block;
             }
+
+            .header {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .search-bar {
+                order: 3;
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
         }
 
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -171,56 +214,53 @@
         </ul>
     </div>
 
-    <div class="main-content">
-        <!-- Header Section -->
-        <div class="header d-flex justify-content-between align-items-center">
-            <h2>Register New Doctor</h2>
+
+<div class="main-content">
+        <div class="header">
             <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+            <div class="user-profile">MediCare Admin</div>
+            <!-- <input type="text" class="search-bar" placeholder="Search..."> -->
         </div>
+        <section>
+            <h2 class="card-header">All Patients</h2>
 
-        <!-- Form Section -->
-        <div class="form-section">
-            <!-- Display success or error messages -->
-            {% if messages %}
-                <div class="alert alert-info">
-                    {% for message in messages %}
-                        <p>{{ message }}</p>
-                    {% endfor %}
+            <!-- View Existing Appointments -->
+            <div class="row">
+                {% for patient in patient %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Name: {{ patient.name }}</h5>
+                            <div class="appointment-info">
+                                <span>Blood Group:</span> {{ patient.blood_group }}
+                            </div>
+                            <div class="appointment-info">
+                                <span>Phone:</span> {{ patient.phone }}
+                            </div>
+                            <div class="appointment-info">
+                                <span>Email:</span> {{ patient.email }}
+                            </div>
+                            <div class="appointment-info">
+                                <span>Gender:</span> {{ patient.gender }}
+                            </div>
+                            <div class="appointment-info">
+                                <span>Age:</span> {{ patient.age }}
+                            </div>
+                            <div class="appointment-info">
+                                <span>Address:</span> {{ patient.address }}
+                            </div>
+                            <div class="appointment-info">
+                                <span>Joining Date:</span> {{ patient.date_created }}
+                            </div>
+    
+                        </div>
+                    </div>
                 </div>
-            {% endif %}
-
-            <!-- Form to register new doctor -->
-            <form method="POST">
-                {% csrf_token %}
                 
-                <!-- Doctor Name -->
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" name="name" class="form-control" required>
-                </div>
-
-                <!-- Doctor Email -->
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
-
-                <!-- Select Department -->
-                <div class="mb-3">
-                    <label for="spec_name" class="form-label">Departments</label>
-                    <select class="form-control" id="spec_name" name="spec_name" required>
-                        <option value="" selected>Select a Department</option>
-                        {% for dep in departments %}
-                            <option value="{{ dep.id }}">{{ dep.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary">Register Doctor</button>
-            </form>
-        </div>
-    </div>
+                {% endfor %}
+            </div>
+        </section>
+</div>
 
     <script>
         function toggleSidebar() {

@@ -19,6 +19,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_protect
 from django.utils import timezone
+from django.core.exceptions import PermissionDenied
+
 
 
 
@@ -320,13 +322,24 @@ def register_doctor(request):
         
 
 def book_appointment(request):
+    patient_email = request.session.get('patient')
+    if not patient_email:
+        return redirect('login')  # Redirect to login if no session data for patient
+
+    try:
+        # Retrieve the patient instance based on the session email
+        patient = Patient.objects.get(email=patient_email)
+    except Patient.DoesNotExist:
+        return redirect('login')  # If the patient does not exist, redirect to login
+
     if request.method == 'POST':
-        name = request.POST['name']
-        email = request.POST['email']
+        name = request.POST.get('name')
         age = request.POST['age']
         gender = request.POST['gender']
+        blood_group = request.POST['bgroup']
         phone = request.POST['phone']
         address = request.POST['address']
+        pincode = request.POST['pin']
         appointment_date = request.POST['appointment_date']
         department_id = request.POST['department']
         doctor_id = request.POST['doctor']
@@ -340,44 +353,44 @@ def book_appointment(request):
 
         # If the appointment count exceeds the max token limit for the department, raise an error
         if appointment_count >= doctor.department.max_tokens_per_day:
-            return render(request, 'user/quick_appointmnet_error.html', {
+            return render(request, 'user/quick_appointment_error.html', {
                 'error': f"Cannot book more than {doctor.department.max_tokens_per_day} appointments for this department on this day."
             })
 
         # Generate the token number for this appointment
         token_number = appointment_count + 1  # Token numbers start from 1, incrementing with each appointment
 
-        # Check if the patient already exists
-        try:
-            patient = Patient.objects.get(email=email)  # Try to find the patient by email
-        except Patient.DoesNotExist:
-            # If the patient does not exist, create a new patient
-            patient = Patient.objects.create(
-                name=name,
-                email=email,
-                age=age,
-                gender=gender,
-                phone=phone,
-                address=address
-            )
+        # Update the patient details (only if the patient exists)
+        patient.name = name
+        patient.age = age
+        patient.gender = gender
+        patient.blood_group = blood_group
+        patient.phone = phone
+        patient.address = address
+        patient.pincode = pincode
+        patient.save()  # Save the updated patient details
 
         # Create the appointment with the generated token number and the patient instance
         appointment = Appointment.objects.create(
             doctor=doctor,
-            patient=patient,
+            patient=patient,  # Ensure patient is linked to the appointment
             appointment_date=appointment_date,
             department=department.name,  # Store the department name
             token_number=token_number
         )
 
         # Return the success page with the generated appointment details
-        return render(request, 'user/appointment_success.html', {'appointment': appointment.token_number})
+        # return render(request, 'user/appointment_success.html', {'appointment': appointment.token_number})
+        return redirect(appointment_success)  # Redirect to the success page
 
     else:
         # Fetch doctors and departments to populate dropdowns
         doctors = Doctor.objects.all()
         departments = Department.objects.all()
-        return render(request, 'user/quick_appointment.html', {'doctors': doctors, 'departments': departments})
+        return render(request, 'user/quick_appointment.html', {'doctors': doctors, 'departments': departments, 'patient': patient})
+
+
+
 
 
 
@@ -388,25 +401,66 @@ def get_doctors(request):
     return JsonResponse({'doctors': doctor_list})
 
 
-# def appointment_success(request, token_number):
-#     return render(request, 'user/appointment_success.html', {'token_number': token_number})
+def appointment_success(request):
+    email = request.session.get('patient')
+    
+    if not email:
+        # Redirect if no session exists for 'patient'
+        return redirect('login')  # Assuming you have a login view
+    
+    # Fetch the patient from the email
+    try:
+        patient = Patient.objects.get(email=email)
+    except Patient.DoesNotExist:
+        # Handle case where the patient doesn't exist
+        return redirect('login')
+    
+    # Fetch all appointments for the patient, ordered by appointment date
+    appointments = Appointment.objects.filter(patient=patient).order_by('appointment_date')[::-1]
+    # prescription = Prescription.objects.filter(patient=patient)
+    
+    if not appointments:
+        # Handle case where no appointments exist for the patient
+        return render(request, 'user/appointment_success.html', {'message': 'No appointments found.'})
+    
+    # Render the appointment success page with the list of appointments
+    return render(request, 'user/appointment_success.html', {'appointments': appointments})
 
 
-def appointment_success(req):
-    if 'Patient' in req.session:  # Check if the 'Patient' session key exists
-        try:
-            # Retrieve the Patient object based on the session's 'Patient' key
-            user = Patient.objects.get(username=req.session['Patient'])
-        except Patient.DoesNotExist:
-            return render(req, 'error_page.html', {'message': 'User not found'})
-        
-        # Fetch appointments for the given patient, ordered by the most recent
-        appointments = Appointment.objects.filter(patient=user).order_by('-id')
 
-        # Render the template with the appointments data
-        return render(req, 'user/appointment_success.html', {'appointments': appointments})
-    else:
-        return redirect(appointment_login)  # Redirect to login if session is not found
+
+
+
+
+
+
+def view_prescription(request):
+    email = request.session.get('patient')
+    
+    if not email:
+        # Redirect if no session exists for 'patient'
+        return redirect('login')  # Assuming you have a login view
+    
+    try:
+        # Fetch the patient from the email
+        patient = Patient.objects.get(email=email)
+    except Patient.DoesNotExist:
+        # Handle case where the patient doesn't exist
+        return redirect('login')
+    
+    # Fetch all prescriptions for the patient
+    prescriptions = Prescription.objects.filter(patient=patient)[::-1]
+    
+    if not prescriptions:
+        # Handle case where no prescriptions exist for the patient
+        return render(request, 'user/view_prescription.html', {'message': 'No prescriptions found.'})
+    
+    # Render the view prescription page with the list of prescriptions
+    return render(request, 'user/view_prescription.html', {'prescriptions': prescriptions})
+
+
+
+
 
 
 
@@ -439,11 +493,16 @@ def user_home(request):
     return render(request, 'user/index.html', {'appointment': appointment})
 
 
+
 def doc_home(req):
-    if 'doctor' in req.session:              #checking section status
-        return render(req, 'doctor/doc_home.html')
+    if 'doctor' in req.session:
+        doctor=Doctor.objects.get(email=req.session['doctor'])  # Assuming you store the doctor's email in the session
+        return render(req, 'doctor/doc_home.html',{'doctor':doctor})
     else:
         return redirect(appointment_login)
+
+
+
 
 def staff_home(req):
     if 'staff' in req.session:              #checking section status
@@ -468,16 +527,20 @@ def admin_home(req):
 
 
 def doctor_appointments_view(req):
-    # Check if the 'doctor' session exists
     if 'doctor' in req.session:
         try:
-            # Get the doctor based on email stored in session
             doctor = Doctor.objects.get(email=req.session['doctor'])  # Assuming you store the doctor's email in the session
         except Doctor.DoesNotExist:
             return redirect(appointment_login)  # Redirect to the login page if the doctor is not found
         
-        # Fetch all appointments for the logged-in doctor
-        appointments = Appointment.objects.filter(doctor=doctor).order_by('-appointment_date')
+        # Get today's date in the local timezone
+        today = timezone.localdate()
+        
+        # Fetch today's appointments for the logged-in doctor
+        appointments = Appointment.objects.filter(
+            doctor=doctor,
+            appointment_date=today  # Filter by today's date
+        ).order_by('-appointment_date')
         
         # Render the appointments page with the doctor's appointments
         return render(req, 'doctor/appointments.html', {'appointments': appointments})
@@ -488,19 +551,56 @@ def doctor_appointments_view(req):
 
 
 
+
 def view_patient_details(request, patient_id):
     patient = get_object_or_404(Patient, id=patient_id)
-    prescription, created = Prescription.objects.get_or_create(patient=patient)
+
+    # Check if the session contains a 'doctor' key
+    if 'doctor' not in request.session:
+        # If no 'doctor' key is found in the session, raise a PermissionDenied error or handle as needed
+        raise PermissionDenied("You do not have the necessary permissions to view this page.")
+
+    # Get the doctor from the session
+    doctor = Doctor.objects.get(email=request.session['doctor'])   # This assumes 'doctor' in session is an ID or a doctor object
+
+    # Fetch or create the prescription, ensuring the doctor is provided
+    prescription, created = Prescription.objects.get_or_create(patient=patient, doctor=doctor)
 
     if request.method == 'POST':
-        medications = request.POST['medications']
-        notes = request.POST['notes']
-
+        # Update prescription data from POST request
+        medications = request.POST.get('medications', '')
+        notes = request.POST.get('notes', '')
         prescription.medications = medications
         prescription.notes = notes
         prescription.date_prescribed = timezone.now()
         prescription.save()
 
-        return redirect('view_patient_details', patient_id=patient.id)
+        # Redirect back to the patient's details page
+        return redirect(doctor_appointments_view)
 
-    return render(request, 'doctor/patient_details.html', {'patient': patient, 'prescription': prescription})
+    # Render the patient's details along with the prescription
+    return render(request, 'doctor/patient_details.html', {'patient': patient, 'prescription': prescription}) 
+
+
+
+
+
+
+def admin_view_appointments(req):
+    appointments=Appointment.objects.all()[::-1]
+    return render( req,'admin/appointments.html',{'appointments':appointments})
+
+
+
+def view_all_patient(req):
+    patient=Patient.objects.all()[::-1]
+    return render( req,'admin/all_patients.html',{'patient':patient})
+
+def view_all_doctors(req):
+    doc=Doctor.objects.all()[::-1]
+    return render( req,'admin/all_doctors.html',{'doc':doc})
+
+
+def view_all_prescription(req):
+    pre=Prescription.objects.all()[::-1]
+    return render( req,'admin/all_prescriptions.html',{'pre':pre})
