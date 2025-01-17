@@ -50,3 +50,13 @@ class Appointment(models.Model):
     appointment_date = models.DateField()
     token_number = models.IntegerField()
     department = models.CharField(max_length=50)
+
+
+
+
+class Enquire(models.Model):
+    name=models.TextField()
+    email=models.EmailField()
+    subject=models.TextField()
+    phone=models.IntegerField()
+    message=models.TextField()

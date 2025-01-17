@@ -3,84 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Hospital Admin</title>
-    {% load static %}
+    <title>MediCare - Doctor Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #f8f9fa;
+            --text-color: #333;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .branding {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .hospital-name {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .doctor-info {
+            text-align: right;
+        }
+
+        .doctor-name {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .department {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #34495e;
+        }
+
+        .main-content {
+            margin-top: 100px;
+            padding: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .quote-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .quote-text {
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .quote-author {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .quick-actions {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .action-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .action-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .branding {
+                justify-content: center;
+            }
+
+            .doctor-info {
+                text-align: center;
+            }
+
+            .logout-btn {
+                display: block;
+                width: 100%;
+                text-align: center;
+                margin-top: 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+                margin-top: 160px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <link rel="stylesheet" href="{% static 'doctor_css/doc_home.css' %}">
-    <!-- <script src="{% static 'js/doc_home.js' %}"></script> -->
-
     <header class="header">
-        <div class="container">
-            <h1 class="logo">Dr.{{ doctor.name }}</h1>
-            <h4>{{ doctor.department.name }}</h4>
-            <nav class="nav">
-                <ul class="nav-list">
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#testimonials">Testimonials</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="logout">LogOut</a></li>
-                </ul>
-            </nav>
+        <div class="header-content">
+            <div class="branding">
+                <div class="hospital-name">MediCare</div>
+                <div class="doctor-info">
+                    <h1 class="doctor-name">Dr. {{ doctor.name }}</h1>
+                    <div class="department">{{ doctor.department.name }}</div>
+                </div>
+            </div>
+            <a href="logout" class="logout-btn">Logout</a>
+            <a href="change_password" class="logout-btn">change password</a>
         </div>
     </header>
 
-    <section class="hero">
-        <div class="container">
-            <h2 class="hero-title">Caring for Your Health</h2>
-            <p class="hero-subtitle">Providing top-notch healthcare services for your well-being.</p>
-            <a href="doctor_appointments_view" class="btn">View Today Appointments</a>
-        </div>
-    </section>
+    <main class="main-content">
+        <section class="quote-section">
+            <p class="quote-text">"The good physician treats the disease; the great physician treats the patient who has the disease."</p>
+            <p class="quote-author">- Sir William Osler</p>
+        </section>
 
-    <section id="about" class="about">
-        <div class="container">
-            <h2>About Dr. Health</h2>
-            <p>Dr. Health is a trusted medical professional with years of experience in patient care. Our clinic ensures personalized treatments and modern healthcare solutions.</p>
-        </div>
-    </section>
+        <section class="quick-actions" style="text-align: center;">
+            <h2>Quick Actions</h2>
+            <a href="doctor_appointments_view" class="action-btn">View Today's Appointments</a>
+        </section>
 
-    <section id="services" class="services">
-        <div class="container">
-            <h2>Our Services</h2>
-            <div class="service-grid">
-                <div class="service-item">
-                    <h3>General Checkup</h3>
-                    <p>Comprehensive health assessments to keep you on track.</p>
-                </div>
-                <div class="service-item">
-                    <h3>Specialist Consultation</h3>
-                    <p>Access to expert advice for specific health concerns.</p>
-                </div>
-                <div class="service-item">
-                    <h3>Diagnostics</h3>
-                    <p>State-of-the-art diagnostic tests and lab facilities.</p>
-                </div>
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>Today's Schedule</h3>
+                <p>View and manage your appointments for today</p>
             </div>
-        </div>
-    </section>
-
-    <section id="testimonials" class="testimonials">
-        <div class="container">
-            <h2>What Our Patients Say</h2>
-            <div class="testimonial-item">
-                <p>"Dr. Health provided exceptional care and personalized attention. Highly recommend!"</p>
-                <span>- Jane Doe</span>
+            <div class="stat-card">
+                <h3>Patient Records</h3>
+                <p>Access your patient history and medical records</p>
             </div>
-            <div class="testimonial-item">
-                <p>"The clinic is well-equipped, and the staff is incredibly kind and professional."</p>
-                <span>- John Smith</span>
+            <div class="stat-card">
+                <h3>Upcoming Week</h3>
+                <p>Preview next week's appointment schedule</p>
             </div>
-        </div>
-    </section>
-
-    <footer class="footer" id="contact">
-        <div class="container">
-            <h2>Contact Us</h2>
-            <p>Email: contact@drhealth.com | Phone: +123 456 7890</p>
-            <p>© 2024 Dr. Health. All rights reserved.</p>
-        </div>
-    </footer>
+        </section>
+    </main>
 </body>
 </html>

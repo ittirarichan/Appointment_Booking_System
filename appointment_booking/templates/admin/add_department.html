@@ -208,10 +208,12 @@
             <button class="close-sidebar" onclick="toggleSidebar()">×</button>
         </div>
         <ul class="nav-links">
-            <li><a href="#" class="active">Dashboard</a></li>
-            <li><a href="{% url 'register_doctor' %}">Doctors</a></li>
+            <li><a href="admin_home" class="active">Dashboard</a></li>
+            <li><a href="{% url 'register_doctor' %}">Doctors Registration</a></li>
+            <li><a href="view_all_doctors">Doctors</a></li>
             <li><a href="admin_view_appointments">Appointments</a></li>
-            <li><a href="#">Patients</a></li>
+            <li><a href="view_all_patient">Patients</a></li>
+            <li><a href="view_all_prescription">prescription</a></li>
             <li><a href="department">Department</a></li>
             <li><a href="logout">LogOut</a></li>
         </ul>

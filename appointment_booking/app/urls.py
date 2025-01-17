@@ -13,7 +13,7 @@ urlpatterns=[
     path('delete_Specialization/<int:id>/', views.delete_Specialization, name='delete_Specialization'),
     # path('register-staff/', views.register_staff, name='register_staff'),
     path('register-doctor/', views.register_doctor, name='register_doctor'),
-    path('services',views.user_services),
+    path('services',views.services),
 
     # URL for creating a token
     path('appointment',views.book_appointment),
@@ -27,5 +27,7 @@ urlpatterns=[
     path('view_all_patient', views.view_all_patient),
     path('view_all_doctors', views.view_all_doctors),
     path('view_all_prescription', views.view_all_prescription),
-
+    path('contact', views.contact),
+    path('about', views.about),
+    path("change_password",views.change_password),
 ]

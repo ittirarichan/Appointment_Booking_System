@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth import authenticate,login as auth
+from django.contrib.auth import authenticate,login,update_session_auth_hash
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib import messages
@@ -466,11 +466,6 @@ def view_prescription(request):
 
 
 
-def user_services(req):
-    if 'patient' in req.session:
-        return render(req,'user/services.html')
-    else:
-        return redirect(appointment_login)
 
 
 
@@ -512,7 +507,8 @@ def staff_home(req):
 
 def admin_home(req):
     if 'admin' in req.session:              #checking section status
-        return render(req, 'admin/admin_home.html')
+        enquiries = Enquire.objects.all()
+        return render(req, 'admin/admin_home.html',{'enquiries':enquiries})
     else:
         return redirect(appointment_login)
 
@@ -604,3 +600,91 @@ def view_all_doctors(req):
 def view_all_prescription(req):
     pre=Prescription.objects.all()[::-1]
     return render( req,'admin/all_prescriptions.html',{'pre':pre})
+
+def contact(request):
+    if request.method == "POST":
+        # Get form data
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        
+        # Save data to the database
+        enquiry = Enquire(
+            name=name,
+            email=email,
+            phone=phone,
+            subject=subject,
+            message=message
+        )
+        enquiry.save()
+        
+        # Redirect or render a success page
+        return redirect(contact)
+    else:
+
+        return render(request,'user/contact.html')
+
+
+
+    
+def about(req):
+    return render(req,'user/about.html')
+
+
+def services(req):
+    if 'patient' in req.session:
+        return render(req,'user/services.html')
+    else:
+        return redirect(appointment_login)
+    
+
+# from django.shortcuts import render, redirect
+# from django.contrib import messages
+def change_password(request):
+    # Check if the doctor is logged in
+    if 'doctor' in request.session:
+        if request.method == 'POST':
+            current_password = request.POST.get('current_password')
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+            
+            try:
+                # Retrieve the current doctor using the email stored in the session
+                doctor = Doctor.objects.get(email=request.session['doctor'])
+                
+                # Validate the current password
+                if doctor.password != current_password:  # Direct comparison for plain text passwords
+                    messages.error(request, 'Current password is incorrect.')
+                    return redirect(change_password)  # Use the URL name for redirection
+                
+                # Check if the new password matches the confirmation
+                if new_password != confirm_password:
+                    messages.error(request, 'New passwords do not match.')
+                    return redirect(change_password)
+                
+                # Validate the password strength (example: minimum 8 characters)
+                if len(new_password) < 8:
+                    messages.error(request, 'Password must be at least 8 characters long.')
+                    return redirect(change_password)
+                
+                # Update the password
+                doctor.password = new_password  # Direct assignment for plain text passwords
+                doctor.save()
+                
+                messages.success(request, 'Your password has been changed successfully.')
+                return redirect(doc_home)  # Replace with your doctor's dashboard URL
+            
+            except Doctor.DoesNotExist:
+                # If the doctor is not found, clear the session and redirect to login
+                request.session.flush()
+                messages.error(request, 'Session expired. Please log in again.')
+                return redirect(appointment_login)
+        
+        # Render the change password form
+        return render(request, 'doctor/change_password.html')
+    
+    # If the session is invalid, redirect to login
+    messages.error(request, 'Please log in to continue.')
+    return redirect(appointment_login)

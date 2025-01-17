@@ -4,65 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediCare Hospital - Your Health, Our Priority</title>
-     <!-- Link to Bootstrap CSS -->
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-     <!-- Optional Bootstrap Icons (if needed) -->
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-         <!-- Optional Bootstrap JS (for the navbar toggle functionality) -->
+    <!-- Link to Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional Bootstrap Icons (if needed) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Optional Bootstrap JS (for the navbar toggle functionality) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     {% load static %}
 </head>
 <body>
     <link rel="stylesheet" href="{% static 'user_css/index.css'%}">
 
-    
-    <!-- Navigation -->
-    <!-- <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">MediCare</div>
-            <div class="nav-links">
-                <a href="">Home</a>
-                <a href="services">Services</a>
-                <a href="#">Doctors</a>
-                <a href="prescriptions">Prescriptions</a>
-                <a href="appointment_success">Token History</a>
-                <a href="logout">Logout</a>
-            </div>
-            <button class="menu-btn" aria-label="Toggle Navigation">☰</button>
-        </div>
-    </nav> -->
-
-
-
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="">MediCare</a>
-            <!-- Toggle button for mobile view -->
+            <a class="navbar-brand" href="user_home">MediCare</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="">Home</a>
+                        <a class="nav-link active" href="user_home">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="prescriptions">Prescriptions</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="appointment_success">Appointments Booked</a>
+                        <a class="nav-link" href="appointment_success">Appointments</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
+                        <a class="nav-link" href="services">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Services</a>
+                        <a class="nav-link" href="about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
+                        <a class="nav-link" href="contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link appointment-btn" href="appointment">Book Appointment</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="logout">Logout</a>
@@ -72,13 +54,12 @@
         </div>
     </nav>
 
-
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
             <h1>Your Health is Our Priority</h1>
             <p>Professional healthcare services with a personal touch</p>
-           <a href="appointment"> <button class="cta-button">Click here to Book Appointments</button></a>
+            <a href="appointment"> <button class="cta-button">Click here to Book Appointments</button></a>
         </div>
     </section>
 
@@ -137,10 +118,10 @@
             <div class="footer-column">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Our Services</a></li>
+                    <li><a href="about">About Us</a></li>
+                    <li><a href="services">Our Services</a></li>
                     <li><a href="#">Doctors</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="contact">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -157,20 +138,12 @@
                 <ul>
                     <li>123 Hospital Street</li>
                     <li>City, State 12345</li>
-                    <li>Phone: (123) 456-7890</li>
+                    <li>Phone: +91-9744642436</li>
                     <li>Email: info@medicare.com</li>
                 </ul>
             </div>
         </div>
     </footer>
-    <script>
-        // Toggle the menu for mobile devices
-        const menuBtn = document.querySelector('.menu-btn');
-        const navLinks = document.querySelector('.nav-links');
-    
-        menuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('show');
-        });
-    </script>
+
 </body>
 </html>

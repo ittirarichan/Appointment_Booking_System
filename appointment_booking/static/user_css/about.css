@@ -1,11 +1,3 @@
-/* Basic Styling */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
 /* Navbar Styles */
 .navbar {
     padding: 1rem 2rem;
@@ -110,107 +102,44 @@
     }
 }
 
-/* Hero Section */
-.hero {
-    background: linear-gradient(rgba(37,99,235,0.9), rgba(37,99,235,0.9)), url('/api/placeholder/1920/1080') no-repeat center/cover;
-    height: 600px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
-    padding: 0 1rem;
-    margin-top: 4rem;
+
+
+/* About Us Page Styles */
+.about-us {
+    background-color: #f8f9fa;
+    padding-top: 60px;
 }
 
-.hero-content h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+.about-us h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
 }
 
-.hero-content p {
+.about-us p {
     font-size: 1.2rem;
-    margin-bottom: 2rem;
 }
 
-.cta-button {
-    background: white;
-    color: #2563eb;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 50px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.cta-button:hover {
-    background: #f8f9fa;
-}
-
-/* Services Section */
-.services {
-    padding: 4rem 5%;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.section-title {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 3rem;
-}
-
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-}
-
-.service-card {
-    background: white;
-    padding: 2rem;
+.about-us img {
+    max-width: 100%;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
+    margin-top: 2rem;
 }
 
-.service-card:hover {
+.card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
     transform: translateY(-5px);
 }
 
-.service-icon {
-    width: 50px;
-    height: 50px;
-    background: #e5edff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
+.card-img-top {
+    border-radius: 10px;
 }
 
-/* Stats Section */
-.stats {
-    background: #f8f9fa;
-    padding: 4rem 5%;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.stat-item h3 {
-    color: #2563eb;
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-}
 
 /* Footer */
 footer {
@@ -275,3 +204,4 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+

@@ -241,7 +241,7 @@
             <button class="close-sidebar" onclick="toggleSidebar()">×</button>
         </div>
         <ul class="nav-links">
-            <li><a href="#" class="active">Dashboard</a></li>
+            <li><a href="admin_home" class="active">Dashboard</a></li>
             <li><a href="{% url 'register_doctor' %}">Doctors Registration</a></li>
             <li><a href="view_all_doctors">Doctors</a></li>
             <li><a href="admin_view_appointments">Appointments</a></li>
@@ -260,15 +260,32 @@
         </div>
 
         <div class="grid-container">
-            <div class="card fade-in">
-                <h3>Revenue</h3>
-                <div class="stats">$45,678</div>
-                <div class="trend">
-                    <span>↑ 8%</span>
-                    <span>from last month</span>
+            <div class="container mt-5">
+                <h1 class="mb-4">Contact Inquiries</h1>
+                <div class="row">
+                    {% for enquiry in enquiries %}
+                        <div class="col-md-4">
+                            <div class="card fade-in mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ enquiry.name }}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ enquiry.email }}</h6>
+                                    <p class="card-text">
+                                        <strong>Phone:</strong> {{ enquiry.phone }}<br>
+                                        <strong>Subject:</strong> {{ enquiry.subject }}<br>
+                                        <strong>Message:</strong> {{ enquiry.message }}
+                                    </p>
+                                    <!-- <div class="trend">
+                                        <span>Submitted on {{ enquiry.created_at|date:"d M Y, h:i A" }}</span>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p>No contact inquiries found.</p>
+                    {% endfor %}
                 </div>
             </div>
-            <div class="card fade-in">
+            <!-- <div class="card fade-in">
                 <h3>Orders</h3>
                 <div class="stats">892</div>
                 <div class="trend">
@@ -283,7 +300,7 @@
                     <span>↑ 5%</span>
                     <span>from last month</span>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 

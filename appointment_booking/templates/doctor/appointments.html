@@ -43,6 +43,7 @@
                             <h5>Token Number: {{ appointment.token_number }}</h5>
                             <p><strong>Patient Name:</strong> {{ appointment.patient.name }}</p>
                             <p><strong>Phone Number:</strong> {{ appointment.patient.phone }}</p>
+                            <p><strong>Appointment Date:</strong> {{ appointment.appointment_date }}</p>
                             <a href="{% url 'view_patient_details' appointment.patient.id %}" class="btn appointment-button">View Details</a>
                         </div>
                     </div>
