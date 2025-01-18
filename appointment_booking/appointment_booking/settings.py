@@ -133,5 +133,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'abhishekbinish86@gmail.com'
-EMAIL_HOST_PASSWORD = 'xewq osgl gtnw sinz'
+EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = 'abhishekbinish86@gmail.com'
